@@ -10,6 +10,7 @@ import static com.talexck.poker510k.GameLogic.showpoker.callmain;
 public class GameMain extends JFrame {
     private MenuItemActionListener menuItemAction=new MenuItemActionListener();
     public static Integer mainpoker;
+    public static Integer turns;
     public GameMain() throws InterruptedException {
         super("510k游戏");
 
@@ -21,19 +22,26 @@ public class GameMain extends JFrame {
         button.addActionListener(menuItemAction);
         Button computerMove = new Button("造反");
         computerMove.addActionListener(menuItemAction);
+        Button computerMove2 = new Button("开始");
+        computerMove2.addActionListener(menuItemAction);
         constrol.add(newgame);
         constrol.add(button);
         constrol.add(computerMove);
+        constrol.add(computerMove2);
         this.add(constrol,BorderLayout.SOUTH);
         this.setSize(1000, 800);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setVisible(true);
-        com.talexck.poker510k.GameLogic.givepoker.givepokers(1,1);
         mainpoker = 2;
+        turns=1;
     }
 
     public static Integer poker=0;
+
+    public static void tipinfo(String info, String title){
+        JOptionPane.showMessageDialog(null,info,title,JOptionPane.PLAIN_MESSAGE);
+    }
 
     class MenuItemActionListener extends JFrame  implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -45,46 +53,56 @@ public class GameMain extends JFrame {
                 Integer poker2 = 0;
                 if (poker2==0 && poker1!=0 && poker1-Math.round(poker1/100)*100==mainpoker && poker==0){
                     poker1 = Math.round(poker1/100);
-                    poker=callmain(poker1, poker2);
+                    poker=callmain(poker1, poker2, 1);
                 }else if(poker1==poker2 && poker1-Math.round(poker1/100)*100==mainpoker){
                     poker1 = Math.round(poker1/100);
                     poker2 = Math.round(poker1/100);
                     Integer pokers = poker;
-                    poker=callmain(poker1, poker2);
+                    poker=callmain(poker1, poker2,1);
                     if(pokers==poker){
-                        //丢回去
+                        tipinfo("叫主/炒牌失败","提示");
                     }
                 }else if(poker1==poker2 && poker1==551) {
                     poker1 = Math.round(poker1 / 100);
                     poker2 = Math.round(poker1 / 100);
                     Integer pokers = poker;
-                    poker = callmain(poker1, poker2);
+                    poker = callmain(poker1, poker2,1);
                     if(pokers==poker){
-                        //丢回去
+                        tipinfo("叫主/炒牌失败","提示");
                     }
                 }else if(poker1==poker2 && poker1==552) {
                     poker1 = Math.round(poker1 / 100);
                     poker2 = Math.round(poker1 / 100);
                     Integer pokers = poker;
-                    poker = callmain(poker1, poker2);
+                    poker = callmain(poker1, poker2,1);
                     if(pokers==poker){
-                        //丢回去
+                        tipinfo("叫主/炒牌失败","提示");
                     }
                 }else if(poker1==poker2 && poker1==205) {
                     poker1 = 205;
                     poker2 = 205;
-                    poker = callmain(poker1, poker2);
+                    poker = callmain(poker1, poker2,1);
                 }
                 else if(poker1==551 && poker2==552) {
                     poker1 = 551;
                     poker2 = 552;
-                    poker = callmain(poker1, poker2);//这边丢过去叫主成功
+                    poker = callmain(poker1, poker2,1);//这边丢过去叫主成功
                 }else{
-                    //丢回去
+                    tipinfo("叫主/炒牌失败","提示");
                 }
             }else if("造反".equals(actionCommand)) {
                 //暂不开发，一人无硬主且无软主时触发重发牌
+            }else if("开始".equals(actionCommand)) {
+                if(mainpoker==2 && turns==1) {
+                    startagame(1, 1);
+                }
             }
+        }
+    }
+    public static void startagame(Integer uper, Integer condition){
+        try {
+            com.talexck.poker510k.GameLogic.givepoker.givepokers(uper,condition);
+        } catch (InterruptedException ex) {
         }
     }
 }
